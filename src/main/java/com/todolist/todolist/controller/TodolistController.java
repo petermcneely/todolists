@@ -2,9 +2,8 @@ package com.todolist.todolist.controller;
 
 import com.todolist.todolist.datamodel.Todolist;
 import com.todolist.todolist.datatransferobject.TodolistDTO;
-import com.todolist.todolist.repository.TodolistRepository;
+import com.todolist.todolist.service.TodolistService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,44 +22,39 @@ import org.springframework.web.bind.annotation.RestController;
 public class TodolistController {
 
     @Autowired
-    private TodolistRepository todolistRepository;
+    private TodolistService todolistService;
 
     @GetMapping()
     public ResponseEntity<List<TodolistDTO>> getTodolists() {
-        var dto = new ArrayList<TodolistDTO>();
-        todolistRepository.findAll().forEach(t -> dto.add(new TodolistDTO(t)));
+        var dto = todolistService.getTodolists();
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<TodolistDTO> getTodolist(long id) {
-        var resp = todolistRepository.findById(id);
-        if (resp == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(new TodolistDTO(resp.get()), HttpStatus.OK);
-        }
+        var dto = todolistService.getTodolist(id);
+        return dto == null ?
+            new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+            new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<TodolistDTO> createTodolist(@RequestBody Todolist todolist) {
-        var resp = todolistRepository.save(todolist);
-        return new ResponseEntity<>(new TodolistDTO(resp), HttpStatus.OK);
+        var dto = todolistService.createTodolist(todolist);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TodolistDTO> updateTodolist(@RequestBody Todolist todolist) {
-        if (todolistRepository.existsById(todolist.getId())) {
-            var resp = todolistRepository.save(todolist);
-            return new ResponseEntity<>(new TodolistDTO(resp), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        var dto = todolistService.updateTodolist(todolist);
+        return dto == null ?
+            new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+            new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<TodolistDTO> deleteTodolist(long id) {
-        todolistRepository.deleteById(id);
+        todolistService.deleteTodolist(id);
         return new ResponseEntity<>(HttpStatus.OK);
     } 
 }
