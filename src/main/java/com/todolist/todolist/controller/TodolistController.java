@@ -1,6 +1,5 @@
 package com.todolist.todolist.controller;
 
-import com.todolist.todolist.datamodel.Todolist;
 import com.todolist.todolist.datatransferobject.TodolistDTO;
 import com.todolist.todolist.service.TodolistService;
 
@@ -39,14 +38,14 @@ public class TodolistController {
     }
 
     @PostMapping()
-    public ResponseEntity<TodolistDTO> createTodolist(@RequestBody Todolist todolist) {
-        var dto = todolistService.createTodolist(todolist);
+    public ResponseEntity<TodolistDTO> createTodolist(@RequestBody String name) {
+        var dto = todolistService.createTodolist(name);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TodolistDTO> updateTodolist(@RequestBody Todolist todolist) {
-        var dto = todolistService.updateTodolist(todolist);
+    public ResponseEntity<TodolistDTO> updateTodolist(long id, @RequestBody String name) {
+        var dto = todolistService.updateTodolist(id, name);
         return dto == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
             new ResponseEntity<>(dto, HttpStatus.OK);

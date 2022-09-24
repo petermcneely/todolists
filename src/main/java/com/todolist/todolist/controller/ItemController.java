@@ -1,6 +1,5 @@
 package com.todolist.todolist.controller;
 
-import com.todolist.todolist.datamodel.Item;
 import com.todolist.todolist.datatransferobject.ItemDTO;
 import com.todolist.todolist.service.ItemService;
 
@@ -42,24 +41,24 @@ public class ItemController {
     }
 
     @PostMapping()
-    public ResponseEntity<ItemDTO> createItem(@PathVariable("todolistid") long todolistid, @RequestBody Item item) {
-        var createdItem = itemService.createItem(todolistid, item);
+    public ResponseEntity<ItemDTO> createItem(@PathVariable("todolistid") long todolistid, @RequestBody String description) {
+        var createdItem = itemService.createItem(todolistid, description);
         return createdItem == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
             new ResponseEntity<>(createdItem, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ItemDTO> updateItem(@RequestBody Item item) {
-        var updatedItem = itemService.updateItem(item);
+    public ResponseEntity<ItemDTO> updateItem(@PathVariable("todolistid") long todolistid, long id, @RequestBody String description) {
+        var updatedItem = itemService.updateItem(todolistid, id, description);
         return updatedItem == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
             new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ItemDTO> deleteItem(long id) {
-        itemService.deleteItem(id);
+    public ResponseEntity<ItemDTO> deleteItem(@PathVariable("todolistid") long todolistid, long id) {
+        itemService.deleteItem(todolistid, id);
         return new ResponseEntity<>(HttpStatus.OK);
     } 
 }

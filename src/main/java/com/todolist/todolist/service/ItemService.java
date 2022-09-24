@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.todolist.todolist.datamodel.Item;
 import com.todolist.todolist.datatransferobject.ItemDTO;
@@ -34,14 +35,17 @@ public class ItemService {
 
     public ItemDTO getItem(long todolistid, long id) {
         var resp = itemRepository.findById(id);
-        return (resp == null || resp.get().getTodolist().getId() != todolistid) ?
+        return (!resp.isPresent() || resp.get().getTodolist().getId() != todolistid) ?
             null :
             new ItemDTO(resp.get());
     }
 
-    public ItemDTO createItem(long todolistid, Item item) {
+    @Transactional
+    public ItemDTO createItem(long todolistid, String description) {
         var resp = todolistRepository.findById(todolistid);
         if (resp.isPresent()) {
+            var item = new Item();
+            item.setDescription(description);
             item.setTodolist(resp.get());
             var savedItem = itemRepository.save(item);
             return new ItemDTO(savedItem);
@@ -49,15 +53,22 @@ public class ItemService {
         return null;
     }
 
-    public ItemDTO updateItem(Item item) {
-        if (itemRepository.existsById(item.getId())) {
-            var resp = itemRepository.save(item);
-            return new ItemDTO(resp);
+    @Transactional
+    public ItemDTO updateItem(long todolistid, long id, String description) {
+        var resp = itemRepository.findById(id);
+        if (resp.isPresent() && resp.get().getTodolist().getId() == todolistid) {
+            var item = resp.get();
+            item.setDescription(description);
+            return new ItemDTO(itemRepository.save(item));
         }
         return null;
     }
 
-    public void deleteItem(long id) {
-        itemRepository.deleteById(id);
+    @Transactional
+    public void deleteItem(long todolistid, long id) {
+        var resp = itemRepository.findById(id);
+        if (resp.isPresent() && resp.get().getTodolist().getId() == todolistid) {
+            itemRepository.deleteById(id);
+        }
     }
 }
