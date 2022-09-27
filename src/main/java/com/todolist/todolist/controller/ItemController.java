@@ -33,7 +33,7 @@ public class ItemController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDTO> getItem(@PathVariable("todolistid") long todolistid, long id) {
+    public ResponseEntity<ItemDTO> getItem(@PathVariable("todolistid") long todolistid, @PathVariable("id")  long id) {
         var item = itemService.getItem(todolistid, id);
         return item == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
@@ -49,7 +49,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ItemDTO> updateItem(@PathVariable("todolistid") long todolistid, long id, @RequestBody String description) {
+    public ResponseEntity<ItemDTO> updateItem(@PathVariable("todolistid") long todolistid, @PathVariable("id") long id, @RequestBody String description) {
         var updatedItem = itemService.updateItem(todolistid, id, description);
         return updatedItem == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
@@ -57,7 +57,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ItemDTO> deleteItem(@PathVariable("todolistid") long todolistid, long id) {
+    public ResponseEntity<ItemDTO> deleteItem(@PathVariable("todolistid") long todolistid, @PathVariable("id")  long id) {
         itemService.deleteItem(todolistid, id);
         return new ResponseEntity<>(HttpStatus.OK);
     } 

@@ -27,7 +27,7 @@ public class Item {
 
     @Getter
     @Setter
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Todolist todolist;
 
     @Getter

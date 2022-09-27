@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +22,8 @@ public class ItemService {
     public List<ItemDTO> getItems(long todolistid) {
         var todolist = todolistRepository.findById(todolistid);
         if (todolist.isPresent()) {
-            var item = new Item();
-            item.setTodolist(todolist.get());
-
             var dto = new ArrayList<ItemDTO>();
-            itemRepository.findAll(Example.of(item)).forEach(i -> dto.add(new ItemDTO(i)));
+            todolist.get().getItems().forEach(i -> dto.add(new ItemDTO(i)));
             return dto;
         }
         return null;

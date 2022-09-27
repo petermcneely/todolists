@@ -23,6 +23,8 @@ public class TodolistDTO {
         id = todolist.getId();
         name = todolist.getName();
         items = new ArrayList<ItemDTO>();
-        todolist.getItems().forEach(i -> items.add(new ItemDTO(i)));
+        if (todolist.getItems() != null) {
+            todolist.getItems().forEach(i -> items.add(new ItemDTO(i)));
+        }
     }
 }

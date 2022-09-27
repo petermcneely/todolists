@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class TodolistController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<TodolistDTO> getTodolist(long id) {
+    public ResponseEntity<TodolistDTO> getTodolist(@PathVariable("id") long id) {
         var dto = todolistService.getTodolist(id);
         return dto == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
@@ -44,7 +45,7 @@ public class TodolistController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TodolistDTO> updateTodolist(long id, @RequestBody String name) {
+    public ResponseEntity<TodolistDTO> updateTodolist(@PathVariable("id") long id, @RequestBody String name) {
         var dto = todolistService.updateTodolist(id, name);
         return dto == null ?
             new ResponseEntity<>(HttpStatus.NOT_FOUND) :
@@ -52,7 +53,7 @@ public class TodolistController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TodolistDTO> deleteTodolist(long id) {
+    public ResponseEntity<TodolistDTO> deleteTodolist(@PathVariable("id") long id) {
         todolistService.deleteTodolist(id);
         return new ResponseEntity<>(HttpStatus.OK);
     } 
