@@ -21,7 +21,7 @@ For the purpose of this demo, we'll use a dockerized database. That is, a databa
 
 ##### Running the server
 
-To run the server, run `mvn spring-server:boot`. You can then access the todolists by hitting `/api/v1/todolists`.
+To run the server, run `mvn spring-boot:server`. You can then access the todolists by hitting `/api/v1/todolists`.
 
 #### Manually testing the server
 
